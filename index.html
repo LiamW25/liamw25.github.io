@@ -1,17 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Website</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
-  </head>
-  <body>
-    <main>
-        <h1>Welcome to My Website</h1>  
-    </main>
-    <script src="index.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐟 Fish</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background:
+            radial-gradient(circle at 50% 20%, #5bdcff 0%, #1689c7 45%, #063b72 100%);
+        cursor: pointer;
+    }
+
+    /* Little bubbles in the background */
+    .bubble {
+        position: absolute;
+        bottom: -50px;
+        border: 2px solid rgba(255,255,255,.35);
+        border-radius: 50%;
+        animation: rise linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes rise {
+        from {
+            transform: translateY(0);
+            opacity: 0;
+        }
+        15% {
+            opacity: .7;
+        }
+        to {
+            transform: translateY(-120vh);
+            opacity: 0;
+        }
+    }
+
+    #ocean {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #title {
+        position: absolute;
+        top: 25px;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: clamp(24px, 4vw, 48px);
+        font-weight: 900;
+        text-shadow: 0 4px 12px rgba(0,0,0,.3);
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    #instructions {
+        position: absolute;
+        top: 85px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255,255,255,.85);
+        font-size: clamp(13px, 2vw, 18px);
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    /* Main fish */
+    #bigFish {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(70vw, 650px);
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        z-index: 10;
+        filter: drop-shadow(0 20px 20px rgba(0,0,0,.25));
+        animation: fishFloat 3s ease-in-out infinite;
+        transition: transform .15s ease;
+        user-select: none;
+    }
+
+    #bigFish:active {
+        transform: translate(-50%, -50%) scale(.94);
+    }
+
+    @keyframes fishFloat {
+        0%, 100% {
+            margin-top: 0;
+        }
+        50% {
+            margin-top: -15px;
+        }
+    }
+
+    /* Small spawned fish */
+    .littleFish {
+        position: absolute;
+        width: 55px;
+        height: 35px;
+        pointer-events: none;
+        z-index: 8;
+        filter: drop-shadow(0 5px 5px rgba(0,0,0,.2));
+    }
+
+    .littleFish svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .splash {
+        position: absolute;
+        pointer-events: none;
+        z-index: 20;
+        font-size: 30px;
+        animation: splash .7s ease-out forwards;
+    }
+
+    @keyframes splash {
+        0% {
+            transform: scale(.5) translateY(0);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.5) translateY(-80px);
+            opacity: 0;
+        }
+    }
+
+    #counter {
+        position: absolute;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0,0,0,.2);
+        backdrop-filter: blur(8px);
+        padding: 10px 20px;
+        border-radius: 999px;
+        font-weight: bold;
+        z-index: 30;
+        pointer-events: none;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="ocean">
+
+    <div id="title">🐟 THE FISH</div>
+    <div id="instructions">CLICK THE FISH</div>
+
+    <!-- BIG FISH -->
+    <svg id="bigFish"
+         viewBox="0 0 800 450"
+         xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Tail -->
+        <path d="M180 225
+                 C90 130 35 125 20 135
+                 C55 190 55 260 20 315
+                 C35 325 90 320 180 225Z"
+              fill="#ff9f43"
+              stroke="#b84d00"
+              stroke-width="12"/>
+
+        <!-- Body -->
+        <ellipse cx="410" cy="225"
+                 rx="290" ry="145"
+                 fill="#ffb84d"
+                 stroke="#b84d00"
+                 stroke-width="12"/>
+
+        <!-- Top fin -->
+        <path d="M330 100
+                 C350 30 430 30 470 105
+                 C420 95 375 100 330 100Z"
+              fill="#ff8c42"
+              stroke="#b84d00"
+              stroke-width="12"/>
+
+        <!-- Bottom fin -->
+        <path d="M365 345
+                 C385 405 455 410 490 340
+                 C440 350 405 350 365 345Z"
+              fill="#ff8c42"
+              stroke="#b84d00"
+              stroke-width="12"/>
+
+        <!-- Eye -->
+        <circle cx="590" cy="180" r="38" fill="white" stroke="#b84d00" stroke-width="10"/>
+        <circle cx="600" cy="180" r="17" fill="#111"/>
+        <circle cx="607" cy="173" r="6" fill="white"/>
+
+        <!-- Smile -->
+        <path d="M595 250 Q650 285 685 235"
+              fill="none"
+              stroke="#b84d00"
+              stroke-width="10"
+              stroke-linecap="round"/>
+
+        <!-- Scales -->
+        <path d="M280 170 Q310 195 280 220
+                 M330 160 Q360 185 330 210
+                 M380 155 Q410 180 380 205
+                 M430 155 Q460 180 430 205
+                 M280 230 Q310 255 280 280
+                 M330 225 Q360 250 330 275
+                 M380 220 Q410 245 380 270
+                 M430 220 Q460 245 430 270"
+              fill="none"
+              stroke="#e27a20"
+              stroke-width="7"
+              stroke-linecap="round"/>
+
+    </svg>
+
+    <div id="counter">🐟 Little fish: 0</div>
+
+</div>
+
+<script>
+
+const ocean = document.getElementById("ocean");
+const bigFish = document.getElementById("bigFish");
+const counter = document.getElementById("counter");
+
+let fishCount = 0;
+
+/* ---------------------------
+   Background bubbles
+---------------------------- */
+
+for (let i = 0; i < 25; i++) {
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    const size = Math.random() * 25 + 8;
+
+    bubble.style.width = size + "px";
+    bubble.style.height = size + "px";
+    bubble.style.left = Math.random() * 100 + "%";
+    bubble.style.animationDuration = (Math.random() * 8 + 5) + "s";
+    bubble.style.animationDelay = Math.random() * 8 + "s";
+
+    ocean.appendChild(bubble);
+}
+
+
+/* ---------------------------
+   Create little fish
+---------------------------- */
+
+function createFish() {
+
+    fishCount++;
+
+    counter.textContent = "🐟 Little fish: " + fishCount;
+
+    const fish = document.createElement("div");
+    fish.className = "littleFish";
+
+    fish.innerHTML = `
+        <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M25 30
+                     C10 12 5 12 3 15
+                     C10 25 10 35 3 45
+                     C8 48 15 47 25 30Z"
+                  fill="#ffcf56"/>
+
+            <ellipse cx="52" cy="30"
+                     rx="35"
+                     ry="20"
+                     fill="#ffe083"/>
+
+            <circle cx="72" cy="25"
+                    r="5"
+                    fill="white"/>
+
+            <circle cx="73" cy="25"
+                    r="2.5"
+                    fill="#111"/>
+
+        </svg>
+    `;
+
+    ocean.appendChild(fish);
+
+    /* Spawn around the big fish */
+    const x = window.innerWidth / 2 + (Math.random() - .5) * 250;
+    const y = window.innerHeight / 2 + (Math.random() - .5) * 180;
+
+    fish.style.left = x + "px";
+    fish.style.top = y + "px";
+
+    /* Random physics */
+    let vx = (Math.random() - .5) * 8;
+    let vy = (Math.random() - .5) * 8;
+
+    const gravity = 0.12;
+    const bounce = 0.82;
+
+    let px = x;
+    let py = y;
+
+    function animate() {
+
+        vx *= .995;
+        vy += gravity;
+
+        px += vx;
+        py += vy;
+
+        const width = 55;
+        const height = 35;
+
+        /* Bounce off edges */
+
+        if (px <= 0) {
+            px = 0;
+            vx = Math.abs(vx) * bounce;
+        }
+
+        if (px >= window.innerWidth - width) {
+            px = window.innerWidth - width;
+            vx = -Math.abs(vx) * bounce;
+        }
+
+        if (py <= 0) {
+            py = 0;
+            vy = Math.abs(vy) * bounce;
+        }
+
+        if (py >= window.innerHeight - height) {
+            py = window.innerHeight - height;
+            vy = -Math.abs(vy) * bounce;
+        }
+
+        fish.style.left = px + "px";
+        fish.style.top = py + "px";
+
+        /* Flip depending on direction */
+
+        if (vx < 0) {
+            fish.style.transform = "scaleX(-1)";
+        } else {
+            fish.style.transform = "scaleX(1)";
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    /* Remove after a while so the page doesn't get overloaded */
+    setTimeout(() => {
+
+        fish.style.transition = "opacity 1s";
+        fish.style.opacity = "0";
+
+        setTimeout(() => {
+            fish.remove();
+            fishCount--;
+            counter.textContent = "🐟 Little fish: " + fishCount;
+        }, 1000);
+
+    }, 15000);
+}
+
+
+/* ---------------------------
+   Click big fish
+---------------------------- */
+
+bigFish.addEventListener("click", function(e) {
+
+    /* Spawn several fish */
+    for (let i = 0; i < 3; i++) {
+        setTimeout(() => createFish(), i * 100);
+    }
+
+    /* Splash effect */
+    const splash = document.createElement("div");
+
+    splash.className = "splash";
+    splash.textContent = "💦";
+
+    splash.style.left = e.clientX + "px";
+    splash.style.top = e.clientY + "px";
+
+    ocean.appendChild(splash);
+
+    setTimeout(() => splash.remove(), 700);
+});
+
+
+/* Also works with tapping on mobile */
+bigFish.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+});
+
+</script>
+
+</body>
 </html>
